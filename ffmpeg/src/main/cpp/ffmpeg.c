@@ -23,7 +23,7 @@
  * multimedia converter based on the FFmpeg libraries
  */
 
-#include "config.h"
+//#include "config.h"
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
@@ -37,9 +37,7 @@
 #include <io.h>
 #endif
 #if HAVE_UNISTD_H
-
 #include <unistd.h>
-
 #endif
 
 #include "libavformat/avformat.h"
@@ -182,7 +180,7 @@ static void free_input_threads(void);
 
 /* sub2video hack:
    Convert subtitles to video with alpha to insert them in filter graphs.
-   This is a temporary solution until libavfilter gets real subtitles support.
+   This is a temporary solution until include.libavfilter gets real subtitles support.
  */
 
 static int sub2video_get_blank_frame(InputStream *ist) {
@@ -1883,7 +1881,7 @@ static void flush_encoders(void) {
                     if (ifilter->format < 0) {
                         AVCodecParameters *par = ifilter->ist->st->codecpar;
                         // We never got any input. Set a fake format, which will
-                        // come from libavformat.
+                        // come from include.libavformat.
                         ifilter->format = par->format;
                         ifilter->sample_rate = par->sample_rate;
                         ifilter->channels = par->channels;
@@ -3565,7 +3563,7 @@ static int init_output_stream(OutputStream *ost, char *error, int error_len) {
         /*
          * Add global input side data. For now this is naive, and copies it
          * from the input stream's global side data. All side data should
-         * really be funneled over AVFrame and libavfilter, then added back to
+         * really be funneled over AVFrame and include.libavfilter, then added back to
          * packet side data, and then potentially using the first packet for
          * global side data.
          */
@@ -4810,7 +4808,7 @@ static int64_t getmaxrss(void) {
 static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl) {
 }
 
-int main(int argc, char **argv) {
+int run(int argc, char **argv) {
     int i, ret;
     int64_t ti;
 
@@ -4881,5 +4879,18 @@ int main(int argc, char **argv) {
         exit_program(69);
 
     exit_program(received_nb_signals ? 255 : main_return_code);
+    nb_filtergraphs = 0;
+    progress_avio = NULL;
+
+    input_streams = NULL;
+    nb_input_streams = 0;
+    input_files = NULL;
+    nb_input_files = 0;
+
+    output_streams = NULL;
+    nb_output_streams = 0;
+    output_files = NULL;
+    nb_output_files = 0;
+
     return main_return_code;
 }
