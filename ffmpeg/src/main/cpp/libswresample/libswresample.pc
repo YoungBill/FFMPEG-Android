@@ -1,0 +1,14 @@
+prefix=/Users/taochen/Desktop/ffmpeg/编译Android版/build
+exec_prefix=${prefix}
+libdir=/Users/taochen/Desktop/ffmpeg/编译Android版/build/lib
+includedir=/Users/taochen/Desktop/ffmpeg/编译Android版/build/include
+
+Name: libswresample
+Description: FFmpeg audio resampling library
+Version: 2.9.100
+Requires: 
+Requires.private: libavutil >= 55.78.100
+Conflicts:
+Libs: -L${libdir}  -lswresample 
+Libs.private: -lm
+Cflags: -I${includedir}
